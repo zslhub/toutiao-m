@@ -1,0 +1,108 @@
+1.下载安装:https://git-scm.com/download
+官网下载,安装一直一直下一步
+
+2.配置全局用户名和邮箱:
+桌面右键打开Git bash here
+git config --global user.name "用户名"
+git config --global user.email "邮箱名"
+
+3.配置文件:
+文件在本地用户下根目录的.gitconfig文件:C:\Users\Administrator
+命令查看配置信息
+git config user.email       //查看全局配置用户名
+git config user.name        //查看全局配置邮箱
+git config --list --global  //查看全部配置
+
+4.获取常见命令帮助信息
+git help config             //浏览器打开帮助信息
+git config -h               //终端打开帮助信息
+
+5. 初始化本地项目目录为Git控制仓库
+git init                    // 
+
+6.文件提交和文件状态
+操作描述                                         操作命令                          查看文件状态git status/git status --short       状态描述                  
+工作区新建文件                                   工作区新建文件                     Untracked/??                                  未跟踪
+提交暂存区到仓库区                                git commit -m "提交描述"          Unmodified                                     未修改
+提交工作区到暂存和仓库区                           git commit -a -m "提交描述"      Unmodified                                      未修改
+修改工作区代码                                   修改工作区代码                     Modified/M                                    已修改(红色已修改未暂存)
+跟踪新文件                                      git add 文件名                    Modified/M                                    已修改已暂存(绿色已修改已暂存)
+提交工作区到暂存区                               git add 文件名                    Staged/A                                       已暂存
+撤销工作区文件并还原为git仓库版本(谨慎操作)         git checkout -- 文件名           
+提交多个文件到暂存区                              git add .                          
+从暂存区移除单个文件                              git reset HEAD 文件名               Modified/M
+从暂存区移除全部文件                              git reset HEAD .
+同时移除仓库区和工作区                            git rm -f 文件名 
+移除仓库区保留工作区 
+
+7.提交历史
+git log                            //按时间先后列出所有的提交历史,最近的在上面
+git log -2                          //按数量展示最近提交历史
+git log -2 --pretty=oneline         //按数量一行展示最近提交历史
+
+在一行上展示最近两条提交历史的信息,并自定义提交格式
+%h:提交的简写哈希值     %an:作者名字     %ar:作者修订日期,按多久以前的显示      %s 提交说明
+git log -2 --pretty=formart:"%h | %an | %ar | %s"
+
+8.回退版本
+git log --pretty=oneline            //一行展示所有提交历史
+git reset --hard <CommitID>         //根据指定的提交ID 回退到指定版本
+git refloag --pretty=oneline        //在旧版本中查看命令操作历史
+git reset --hard <CommitID>         //再次根据最新的提交ID 跳转到最新的版本
+
+9.Github
+    1.注册Github账户
+    2.设置http访问方式
+        1.创建空白远程github仓库
+        2.本地项目添加到git仓库
+        3.远程仓库和本地仓库关联
+            1.打开git bash Here命令终端界面
+            2.git remote add origin https://github.com/用户名/仓库项目名称          //仓库关联,并把远程仓库命名为origin
+            3.git push -u origin master                                         //将本地仓库内容关联到远程origin仓库中,只有第一次关联仓库需要使用这个完整命令
+        4.推送本地仓库代码到远程仓库
+            1.提交代码到本地仓库
+            2.git push          //推送到远程仓库
+            3.登录github
+    3.秘钥认证ssh访问方式
+        1.打开git bash Here命令终端界面
+        2.生成私钥:ssh-keygen -t rsa -b 4096 -C"github邮箱账户"
+        3.连续敲击三次回车,会在C:\Users\用户名文件夹\.ssh目录生成id_rsa和id_rsa.pub两个文件
+        4.本地打开id_rsa.pub文件,复制文本
+        5.浏览器登录github,点击头像-settings-SSH and GPG Keys-New SSH key
+        6.在title中填写一个key从何而来
+        7.将复制的文本粘贴到key对应的文本框中-点击添加-密码认证
+        8.检查sshkey是否配置成功:ssh -T git@github.com
+        9.创建空白远程github仓库
+        10.本地项目添加到git仓库
+        11.本地仓库上传到github
+            1.设置ssh访问方式,复制命令
+            2.关联推送仓库
+                1.复制关联命令,打开git bash Here命令终端界面,粘贴命令
+                2.复制推送命令,打开git bash Here命令终端界面,粘贴命令
+        12.将远程仓库克隆到本地
+            1.浏览器登录github
+            2.code
+            3.Clone or download
+            4.复制ssh仓库地址
+            5.打开git bash Here命令终端界面
+            6.输入命令:git clone 复制的ssh远程仓库地址
+
+10. 分支
+    1.Git查看分支列表:git branch    //*号表示当前所在分支
+    2.创建分支:git branch 分支名称  
+    3.切换分支:git checkout login    
+    4.创建并切换到分支:git checkout -b 分支名称
+    5.合并分支
+        1.git checkout 主分支名     //切换到主分支
+        2.git merge 分支名          //在主分支合并分支
+    6.删除本地分支:git branch -d 分支名     //不能在当前分支删除当前分支
+    7.冲突分支合并:手动解决,重新提交
+    8.本地分支推送到远程仓库分支
+        1.git push -u 远程仓库名 本地分支名:远程分支名      //第一次关联需要带 -u
+        2.git push -u 远程仓库名 分支名称                  //远程本地分支名称一致
+    9.git remote show 远程仓库名                          //查看全部远程分支
+    10.跟踪分支 
+        1.git checkout 远程分支名                           //把远程分支下载到本地仓库
+        2.git checkout -b 本地分支名 远程仓库名/远程分支名     //把远程分支下载到本地仓库并重命名本地分支
+    10.拉取当前分支远程最新分支:git pull
+    11.删除远程分支:git push 远程仓库名 --delete 远程分支名     //-D 若删除远程分支后要删除本地分支用大写D表示
