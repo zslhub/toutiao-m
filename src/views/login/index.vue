@@ -6,11 +6,11 @@
         <!--
             表单验证 :rules，验证通过触发submit事件
          -->
-        <van-form @submit="onSubmit">
+        <van-form @submit="onSubmit" ref="loginForm">
             <!-- field 表单中的输入框组件 -->
             <van-field
                 v-model="user.mobile"
-                name="手机号"
+                name="mobile"
                 placeholder="请输入手机号"
                 :rules="userFormRules.mobile"
                 type="number"
@@ -20,7 +20,7 @@
             </van-field>
             <van-field
                 v-model="user.code"
-                name="验证码"
+                name="code"
                 placeholder="请输入验证码"
                 :rules="userFormRules.code"
                 type="number"
@@ -28,11 +28,21 @@
             >
                 <i slot="left-icon" class="toutiao toutiao-yanzhengma"></i>
                 <template #button>
+                    <!-- 倒计时 -->
+                    <van-count-down
+                        v-if="isCountDownShow"
+                        :time="time"
+                        format="ss s"
+                        @finish="isCountDownShow = false"
+                    />
                     <van-button
+                        v-else
                         class="send-sms-btn"
                         round
                         size="small"
                         type="default"
+                        @click="onSendSms"
+                        native-type="button"
                         >发送验证码</van-button
                     >
                 </template>
@@ -50,7 +60,7 @@
     </div>
 </template>
 <script>
-import { login } from '@/api/user'
+import { login, sendSms } from '@/api/user'
 import { Toast } from 'vant'
 export default {
     name: 'LoginIndex',
@@ -58,6 +68,7 @@ export default {
     props: {},
     data () {
         return {
+            isCountDownShow: false,
             user: {
                 // 请求参数绑定到表单
                 mobile: '',
@@ -73,7 +84,8 @@ export default {
                     { required: true, message: '验证码不能为空' },
                     { pattern: /\d{6}/, message: '验证码格式错误' }
                 ]
-            }
+            },
+            time: 1000 * 10
         }
     },
     computed: {},
@@ -92,10 +104,33 @@ export default {
             // 1、获取表单数据，2表单验证，3提交表单登录，4根据请求响应结果处理后续操作
             try {
                 const res = await login(user) // 调用请求方法，传递表单数据
-                this.$toast.success('登录成功', res)
+                this.$toast.success('登录成功')
+                console.log('手机号登录成功', res)
+                this.$store.commit('setUser', res.data.data)
             } catch (error) {
                 Toast.fail('登录失败') // vant组件轻提示
                 console.log('登录失败')
+            }
+        },
+        // 1校验手机号，2验证通过现实倒计时，3请求发送验证码
+        async onSendSms () {
+            try {
+                await this.$refs.loginForm.validate('mobile') // validate通过表单的表单名来单项验证，此方法会返回promise对象
+                console.log('验证通过')
+                this.isCountDownShow = true
+            } catch (error) {
+                return console.log('验证失败') // 失败后不再执行后面的代码
+            }
+            try {
+                const res = await sendSms(this.user.mobile)
+                console.log('验证码发送成功', res)
+            } catch (error) {
+                this.isCountDownShow = false
+                if (error.response.status === 429) {
+                    this.$toast(`发送太频繁了，请${60 - this.time / 1000}秒后重试`)
+                } else {
+                    console.log('发送失败')
+                }
             }
         }
     }
