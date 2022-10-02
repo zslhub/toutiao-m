@@ -1,7 +1,7 @@
 @font-face {
   font-family: "toutiao";
   /* Project id 3523559 */
-  src: url('../iconfonticonfont.woff2?t=1664612651666') format('woff2'), url('../iconfonticonfont.woff?t=1664612651666') format('woff'), url('../iconfonticonfont.ttf?t=1664612651666') format('truetype');
+  src: url('../iconfont/iconfont.woff2?t=1664612651666') format('woff2'), url('../iconfont/iconfont.woff?t=1664612651666') format('woff'), url('../iconfont/iconfont.ttf?t=1664612651666') format('truetype');
 }
 .toutiao {
   font-family: "toutiao" !important;
@@ -72,4 +72,13 @@
 }
 .toutiao-guanbi:before {
   content: "\e617";
+}
+.page-nav-bar {
+  background-color: #3296fa !important;
+}
+.page-nav-bar .van-nav-bar__title {
+  color: #fff;
+}
+body {
+  background-color: #f5f7f9;
 }
