@@ -1,11 +1,13 @@
 <template>
     <div class="login-container">
         <!-- 导航栏 -->
-        <van-nav-bar title="登录" class="page-nav-bar" />
+        <van-nav-bar title="登录" class="page-nav-bar">
+            <van-icon slot="left" name="arrow-left" @click="$router.back()">
+                返回
+            </van-icon>
+        </van-nav-bar>
         <!-- 登录表单 -->
-        <!--
-            表单验证 :rules，验证通过触发submit事件
-         -->
+        <!-- 表单验证 :rules，验证通过触发submit事件 -->
         <van-form @submit="onSubmit" ref="loginForm">
             <!-- field 表单中的输入框组件 -->
             <van-field
@@ -105,8 +107,10 @@ export default {
             try {
                 const res = await login(user) // 调用请求方法，传递表单数据
                 this.$toast.success('登录成功')
+
                 console.log('手机号登录成功', res)
                 this.$store.commit('setUser', res.data.data)
+                this.$router.back()
             } catch (error) {
                 Toast.fail('登录失败') // vant组件轻提示
                 console.log('登录失败')
@@ -115,8 +119,8 @@ export default {
         // 1校验手机号，2验证通过现实倒计时，3请求发送验证码
         async onSendSms () {
             try {
-                await this.$refs.loginForm.validate('mobile') // validate通过表单的表单名来单项验证，此方法会返回promise对象
-                console.log('验证通过')
+                this.$refs.loginForm.validate('mobile') // validate通过表单的表单名来单项验证，此方法会返回promise对象
+                console.log('手机号格式验证通过')
                 this.isCountDownShow = true
             } catch (error) {
                 return console.log('验证失败') // 失败后不再执行后面的代码
@@ -127,7 +131,9 @@ export default {
             } catch (error) {
                 this.isCountDownShow = false
                 if (error.response.status === 429) {
-                    this.$toast(`发送太频繁了，请${60 - this.time / 1000}秒后重试`)
+                    this.$toast(
+                        `发送太频繁了，请${60 - this.time / 1000}秒后重试`
+                    )
                 } else {
                     console.log('发送失败')
                 }
