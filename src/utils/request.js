@@ -1,5 +1,5 @@
 // 请求模块
-import axios from 'axios'
+import axios from 'axios'// https://github.com/axios/axios
 import store from '@/store'
 const request = axios.create(
     {

@@ -73,8 +73,8 @@ export default {
             isCountDownShow: false,
             user: {
                 // 请求参数绑定到表单
-                mobile: '',
-                code: ''
+                mobile: '13911111111',
+                code: '246810'
             },
             // 表单验证规则
             userFormRules: {
