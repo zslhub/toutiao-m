@@ -43,6 +43,12 @@ const routes = [
             }
         ]
 
+    },
+    {
+        path: '/search', // 路由地址
+        name: 'search', // 路由名称
+        // 路由组件 懒加载
+        component: () => import('@/views/search/index.vue')
     }
 
 ]

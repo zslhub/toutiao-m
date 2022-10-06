@@ -45,6 +45,7 @@
                         type="default"
                         @click="onSendSms"
                         native-type="button"
+                        :disabled="disabled"
                         >发送验证码</van-button
                     >
                 </template>
@@ -87,7 +88,8 @@ export default {
                     { pattern: /\d{6}/, message: '验证码格式错误' }
                 ]
             },
-            time: 1000 * 10
+            time: 1000 * 10,
+            jishu: 60
         }
     },
     computed: {},
@@ -132,7 +134,9 @@ export default {
                 this.isCountDownShow = false
                 if (error.response.status === 429) {
                     this.$toast(
-                        `发送太频繁了，请${60 - this.time / 1000}秒后重试`
+                        `发送太频繁了，请${this.jishu - this.time / 1000}秒后重试`,
+                        this.jishu -= 10,
+                        this.jishu <= 10 ? this.jishu = 60 : this.jishu
                     )
                 } else {
                     console.log('发送失败')
